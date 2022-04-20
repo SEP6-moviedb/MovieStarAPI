@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.IO;
 using System.Diagnostics;
+using System.Net.Http.Headers;
 
 namespace MovieStarAPI.Controllers
 {
@@ -11,62 +12,42 @@ namespace MovieStarAPI.Controllers
     {
         public static void CallAPI(string searchText)
         {
+
             /*Calling API https://developers.themoviedb.org/3/search/search-people */
             string apiKey = "d969c038879a912c97bceafc05ec99cd";
             HttpWebRequest apiRequest = WebRequest.Create("https://api.themoviedb.org/3/search/person?api_key=" + apiKey + "&language=en-US&query=" + searchText + "&include_adult=false") as HttpWebRequest;
-
+            
             string apiResponse = "";
 
-            using (HttpWebResponse response = apiRequest.GetResponse() as HttpWebResponse)
-            {
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-                apiResponse = reader.ReadToEnd();
-            }
+            HttpWebResponse response = apiRequest.GetResponse() as HttpWebResponse;
+            
+            StreamReader reader = new StreamReader(response.GetResponseStream());
+            apiResponse = reader.ReadToEnd();
+            
             
             ResponseSearchPeople rootObject = JsonConvert.DeserializeObject<ResponseSearchPeople>(apiResponse);
             
             foreach (Result result in rootObject.results)
             {
-
-                Console.WriteLine("___QQQWW___" + result);
-                Debug.WriteLine("__result type___" + result.GetType);
-                Debug.WriteLine("___QQQWW___" + result.ToString());
-                Debug.WriteLine("___QQQWW___" + result);
-                Debug.WriteLine("___QQQWWprofi___" + result.profile_path);
-                Debug.WriteLine("___QQQWW___" + result.GetType);
+                Debug.WriteLine("Result: " + result.ToString());
+                Console.WriteLine("Result: " + result.ToString());
             }
+
+
+
+            // THIS IS OUR OWN NICE AND FINE RECIPE :)
+            var httpClient = new HttpClient();
+            // Get request for search movies https://developers.themoviedb.org/3/search/search-movies
+            var request = new HttpRequestMessage(new HttpMethod("GET"), "https://api.themoviedb.org/3/search/movie?api_key=" + apiKey 
+                + "&language=en-US&query=" + searchText + "&page=1&include_adult=false");
+
+            //request.Headers.TryAddWithoutValidation("authorization", "Bearer <<access_token>>");
+            //
+            //request.Content = new StringContent("{}");
+            //request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
+            var response2 = httpClient.SendAsync(request);
+            Console.WriteLine(response2.Result.StatusCode + "<----statuttrr");
+            Console.WriteLine(response2.Result.Content.ReadAsStringAsync() + "<----statuttrr");
         }
-        /*
-        public ActionResult GetPerson(int id)
-        {
-           
-            Calling API https://developers.themoviedb.org/3/people
-            string apiKey = "d969c038879a912c97bceafc05ec99cd";
-            HttpWebRequest apiRequest = WebRequest.Create("https://api.themoviedb.org/3/person/" + id + "?api_key=" + apiKey + "&language=en-US") as HttpWebRequest;
-
-            string apiResponse = "";
-            using (HttpWebResponse response = apiRequest.GetResponse() as HttpWebResponse)
-            {
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-                apiResponse = reader.ReadToEnd();
-            }
-            /*End*/
-
-            /*http://json2csharp.com
-            ResponsePerson rootObject = JsonConvert.DeserializeObject<ResponsePerson>(apiResponse);
-            TheMovieDb theMovieDb = new TheMovieDb();
-            theMovieDb.name = rootObject.name;
-            theMovieDb.biography = rootObject.biography;
-            theMovieDb.birthday = rootObject.birthday;
-            theMovieDb.place_of_birth = rootObject.place_of_birth;
-            theMovieDb.profile_path = rootObject.profile_path == null ? Url.Content("~/Content/Image/no-image.png") : "https://image.tmdb.org/t/p/w500/" + rootObject.profile_path;
-            theMovieDb.also_known_as = string.Join(", ", rootObject.also_known_as);
-
-            return View(theMovieDb);
-            }
-        */
-        
     }
-
-
 }
