@@ -10,7 +10,7 @@ namespace MovieStarAPI.Controllers
 
     public class tmdbController
     {
-        public static void CallAPI(string searchText)
+        public static async void CallAPI(string searchText)
         {
 
             /*Calling API https://developers.themoviedb.org/3/search/search-people */
@@ -47,7 +47,7 @@ namespace MovieStarAPI.Controllers
             //request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
             var response2 = httpClient.SendAsync(request);
             Console.WriteLine(response2.Result.StatusCode + "<----statuttrr");
-            Console.WriteLine(response2.Result.Content.ReadAsStringAsync() + "<----statuttrr");
+            Console.WriteLine(await response2.Result.Content.ReadAsStringAsync()+ "<----statuttrr");
         }
     }
 }
