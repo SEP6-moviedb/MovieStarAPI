@@ -46,7 +46,19 @@ namespace MovieStarAPI.Controllers
             Console.WriteLine(await response2.Result.Content.ReadAsStringAsync()+ "<----statuttrr"); // Convert result into class.
                                                                                                      // can be done online json to c# object converter
           MovieSearchResult movieSearchResult = JsonConvert.DeserializeObject<MovieSearchResult>(response2.Result.Content.ReadAsStringAsync().Result);
-            Console.WriteLine(movieSearchResult.results.FirstOrDefault().title);
+
+            foreach (var item in movieSearchResult.results)
+            {
+                Console.WriteLine("Title: "+ item.title);
+                Console.WriteLine("Vote count: " + item.vote_count);
+                Console.WriteLine("Adult movie?: " + item.adult);
+                Console.WriteLine("Popularity: " + item.popularity);
+                Console.WriteLine("Release date: " + item.release_date);
+                Console.WriteLine("Original language: " + item.original_language);
+                Console.WriteLine("Average Vote: " + item.vote_average);
+                Console.WriteLine("");
+            }
+            
         }
     }
 }
