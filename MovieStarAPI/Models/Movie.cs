@@ -1,4 +1,6 @@
-﻿namespace MovieStarAPI.Models
+﻿using Newtonsoft.Json;
+
+namespace MovieStarAPI.Models
 {
 
     public class Movie
@@ -18,6 +20,15 @@
             public bool video { get; set; }
             public double vote_average { get; set; }
             public int vote_count { get; set; }
-        
+
+
+        public override string ToString()
+        {
+            return "Is it porn? " + adult + " title: " + original_title + " Popularity: " + popularity + " Release date: " + release_date +
+               " Title: " + title + " video: " + video + " vote avg: " + vote_average + " vote count: " + vote_count;
+        }
+
     }
+
+
 }

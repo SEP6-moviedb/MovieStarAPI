@@ -49,14 +49,14 @@ namespace MovieStarAPI.Controllers
 
             foreach (var item in movieSearchResult.results)
             {
-                Console.WriteLine("Title: "+ item.title);
+             /*   Console.WriteLine("Title: "+ item.title);
                 Console.WriteLine("Vote count: " + item.vote_count);
                 Console.WriteLine("Adult movie?: " + item.adult);
                 Console.WriteLine("Popularity: " + item.popularity);
                 Console.WriteLine("Release date: " + item.release_date);
                 Console.WriteLine("Original language: " + item.original_language);
-                Console.WriteLine("Average Vote: " + item.vote_average);
-                Console.WriteLine("");
+                Console.WriteLine("Average Vote: " + item.vote_average);*/
+                Console.WriteLine("---------------->" + item.ToString());
             }
             
         }
