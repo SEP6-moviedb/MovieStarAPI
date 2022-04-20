@@ -4,12 +4,14 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 //using Newtonsoft.Json;
 //using demo.MVC.Class;
 //using System.Text;
 
 namespace MovieStarAPI.Controllers
 {
+
     public class tmdbController
     {
         // GET
@@ -33,7 +35,7 @@ namespace MovieStarAPI.Controllers
             return View(theMovieDb);
         }
     */
-        public void CallAPI(string searchText, int page)
+        public static void CallAPI(string searchText, int page)
         {
             int pageNo = Convert.ToInt32(page) == 0 ? 1 : Convert.ToInt32(page);
 
@@ -42,10 +44,10 @@ namespace MovieStarAPI.Controllers
             HttpWebRequest apiRequest = WebRequest.Create("https://api.themoviedb.org/3/search/person?api_key=" + apiKey + "&language=en-US&query=" + searchText + "&page=" + pageNo + "&include_adult=false") as HttpWebRequest;
 
             string apiResponse = "";
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3
+            /*ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3
                             | SecurityProtocolType.Tls
                             | SecurityProtocolType.Tls11
-                            | SecurityProtocolType.Tls12;
+                            | SecurityProtocolType.Tls12;*/
             using (HttpWebResponse response = apiRequest.GetResponse() as HttpWebResponse)
             {
                 StreamReader reader = new StreamReader(response.GetResponseStream());
@@ -64,6 +66,9 @@ namespace MovieStarAPI.Controllers
                 //  string link = Url.Action("GetPerson", "TmdbApi", new { id = result.id });
 
                 Console.WriteLine("___QQQWW___" + result);
+                Debug.WriteLine("___QQQWWTYPE___" + result.GetType);
+                Debug.WriteLine("___QQQWWSTRING___" + result.ToString());
+                Debug.WriteLine("___QQQWWNAME___" + result.name);
              //   sb.Append("<div class=\"result\" resourceId=\"" + result.id + "\">" + "<a href=\"" + link + "\"><img src=\"" + image + "\" />" + "<p>" + result.name + "</a></p></div>");
             }
 
