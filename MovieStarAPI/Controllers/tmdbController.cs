@@ -15,7 +15,7 @@ namespace MovieStarAPI.Controllers
 
             /*Calling API https://developers.themoviedb.org/3/search/search-people */
             string apiKey = "d969c038879a912c97bceafc05ec99cd";
-            HttpWebRequest apiRequest = WebRequest.Create("https://api.themoviedb.org/3/search/person?api_key=" + apiKey + "&language=en-US&query=" + searchText + "&include_adult=false") as HttpWebRequest;
+            /*HttpWebRequest apiRequest = WebRequest.Create("https://api.themoviedb.org/3/search/person?api_key=" + apiKey + "&language=en-US&query=" + searchText + "&include_adult=false") as HttpWebRequest;
             
             string apiResponse = "";
 
@@ -31,7 +31,7 @@ namespace MovieStarAPI.Controllers
             {
                 Debug.WriteLine("Result: " + result.ToString());
                 Console.WriteLine("Result: " + result.ToString());
-            }
+            }*/
 
 
 
@@ -40,14 +40,13 @@ namespace MovieStarAPI.Controllers
             // Get request for search movies https://developers.themoviedb.org/3/search/search-movies
             var request = new HttpRequestMessage(new HttpMethod("GET"), "https://api.themoviedb.org/3/search/movie?api_key=" + apiKey 
                 + "&language=en-US&query=" + searchText + "&page=1&include_adult=false");
-
-            //request.Headers.TryAddWithoutValidation("authorization", "Bearer <<access_token>>");
-            //
-            //request.Content = new StringContent("{}");
-            //request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
+            
             var response2 = httpClient.SendAsync(request);
             Console.WriteLine(response2.Result.StatusCode + "<----statuttrr");
-            Console.WriteLine(await response2.Result.Content.ReadAsStringAsync()+ "<----statuttrr");
+            Console.WriteLine(await response2.Result.Content.ReadAsStringAsync()+ "<----statuttrr"); // Convert result into class.
+                                                                                                     // can be done online json to c# object converter
+          MovieSearchResult movieSearchResult = JsonConvert.DeserializeObject<MovieSearchResult>(response2.Result.Content.ReadAsStringAsync().Result);
+            Console.WriteLine(movieSearchResult.results.FirstOrDefault().title);
         }
     }
 }
