@@ -38,6 +38,11 @@ namespace MovieStarAPI.Models
         public List<KnownFor> known_for { get; set; }
         public string name { get; set; }
         public double popularity { get; set; }
+
+        public string ToString()
+        {
+            return this.name + this.adult + this.popularity + this.id;
+        }
     }
 
     public class ResponseSearchPeople

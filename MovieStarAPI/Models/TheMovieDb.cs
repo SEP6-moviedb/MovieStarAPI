@@ -19,5 +19,6 @@ namespace MovieStarAPI.Models
         public string place_of_birth { get; set; }
         public double popularity { get; set; }
         public string profile_path { get; set; }
+
     }
 }
