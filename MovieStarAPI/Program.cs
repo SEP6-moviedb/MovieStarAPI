@@ -13,7 +13,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("https://sep6-moviedb.github.io",
-                                "https://moviestarapi20220420144830.azurewebsites.net/WeatherForecast");
+                                "http://localhost:4200");
         });
 });
 
