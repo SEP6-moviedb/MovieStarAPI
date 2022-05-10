@@ -25,6 +25,7 @@ namespace MovieStarAPI.Controllers
         {
             //omdbTestMethod();
             tmdbController.CallAPI("leonardo");
+            MovieStarController.CallAPI("leonardo");
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
