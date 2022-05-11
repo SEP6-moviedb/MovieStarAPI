@@ -16,7 +16,6 @@ namespace MovieStarAPI.Models
         public UserRating userRating { get; set; }
     }
 
-
     public class TimeStamp
     {
         [JsonProperty("$date")]
@@ -42,6 +41,17 @@ namespace MovieStarAPI.Models
         }
     }
 
+    public class UserRatingAvg
+    {
+        [JsonProperty("_id")]
+        public string movieId { get; set; }
+        public double userRatingAvg { get; set; }
+
+        public override string ToString()
+        {
+            return "Movie ID: " + movieId + ", \t User Rating Avg: " + userRatingAvg;
+        }
+    }
 }
 
 

@@ -7,10 +7,10 @@ namespace MovieStarAPI.Controllers
         [Route("[controller]")]
         public class UserRatingsController : ControllerBase
         {
-            [HttpGet(Name = "GetUserRatings")]
-            public async Task<List<Models.UserRating>> GetAsync()
+            [HttpGet(Name = "GetUserRatingsAvg")]
+            public async Task<List<Models.UserRatingAvg>> GetAsync()
             {
-                var ratingList = await RatingService.GetRatings();
+                var ratingList = await RatingService.GetUserRatingsAvg();
                 return ratingList;
             }
 
