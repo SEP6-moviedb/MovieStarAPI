@@ -16,11 +16,12 @@ namespace MovieStarAPI.Controllers
         private static readonly string Url = "https://data.mongodb-api.com/app/10minexample-ivjtg/endpoint/ratings?secret="+Secret;
 
         // GET USER RATINGS
-        public static async Task<List<UserRatingAvg>> GetUserRatingsAvg()
+        public static async Task<List<UserRatingAvg>> GetUserRatingsAvg(string? movieid)
         {
             HttpClient httpClient = new HttpClient();
             
-            HttpRequestMessage? request = new HttpRequestMessage(new HttpMethod("GET"), Url);
+            HttpRequestMessage? request = new HttpRequestMessage(new HttpMethod("GET"), 
+                Url + (movieid != null ? ("&movieid=" + movieid) : ""));
 
             Task<HttpResponseMessage>? response = httpClient.SendAsync(request);
             Console.WriteLine("GET request: Status code : " + response.Result.StatusCode);

@@ -8,9 +8,9 @@ namespace MovieStarAPI.Controllers
         public class UserRatingsController : ControllerBase
         {
             [HttpGet(Name = "GetUserRatingsAvg")]
-            public async Task<List<Models.UserRatingAvg>> GetAsync()
+            public async Task<List<Models.UserRatingAvg>> GetAsync([FromQuery] string? movieid)
             {
-                var ratingList = await RatingService.GetUserRatingsAvg();
+                var ratingList = await RatingService.GetUserRatingsAvg(movieid);
                 return ratingList;
             }
 
