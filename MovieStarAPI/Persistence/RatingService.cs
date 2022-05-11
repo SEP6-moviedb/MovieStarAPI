@@ -35,7 +35,7 @@ namespace MovieStarAPI.Controllers
             foreach (var ratingBson in ratingBsonArray)
             {
                 string? ratingJson = ratingBson.ToJson(jsonWriterSettings);
-                Root root = Newtonsoft.Json.JsonConvert.DeserializeObject<Root>(ratingJson);
+                RatingRoot root = Newtonsoft.Json.JsonConvert.DeserializeObject<RatingRoot>(ratingJson);
                 UserRating userRating = root.userRating;
 
                 ratingList.Add(userRating);
