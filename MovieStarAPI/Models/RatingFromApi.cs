@@ -27,8 +27,15 @@ namespace MovieStarAPI.Models
     public class UserRating
     {
         public string movieId { get; set; }
-        public int rating { get; set; }
+        public Int32 rating { get; set; }
         public string userId { get; set; }
+
+        public UserRating(string movieId, int rating, string userId)
+        {
+            this.movieId = movieId;
+            this.rating = rating;
+            this.userId = userId;
+        }
 
         public override string ToString()
         {
