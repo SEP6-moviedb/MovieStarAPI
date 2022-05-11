@@ -17,7 +17,7 @@ namespace MovieStarAPI.Controllers
             HttpClient httpClient = new HttpClient();
             string secret = "10minute";
 
-            HttpRequestMessage? request = new HttpRequestMessage(new HttpMethod("GET"), "https://data.mongodb-api.com/app/10minexample-ivjtg/endpoint/ratings?secret="+secret);
+            HttpRequestMessage? request = new HttpRequestMessage(new HttpMethod("GET"), "https://data.mongodb-api.com/app/10minexample-ivjtg/endpoint/ratings?secret=" + secret);
             Console.WriteLine("Sending request: " + request.RequestUri);
 
             Task<HttpResponseMessage>? response2 = httpClient.SendAsync(request);
@@ -33,7 +33,7 @@ namespace MovieStarAPI.Controllers
             foreach (var ratingBson in ratingBsonArray)
             {
                 string? ratingJson = ratingBson.ToJson(jsonWriterSettings);
-                Root root = Newtonsoft.Json.JsonConvert.DeserializeObject<Root>(ratingJson);
+                RatingRoot root = Newtonsoft.Json.JsonConvert.DeserializeObject<RatingRoot>(ratingJson);
                 UserRating userRating = root.userRating;
 
                 ratingList.Add(userRating);

@@ -9,12 +9,11 @@ namespace MovieStarAPI.Models
         public string Oid { get; set; }
     }
 
-    public class Root
+    public class RatingRoot
     {
         public Id _id { get; set; }
         public TimeStamp timeStamp { get; set; }
         public UserRating userRating { get; set; }
-
     }
 
 
