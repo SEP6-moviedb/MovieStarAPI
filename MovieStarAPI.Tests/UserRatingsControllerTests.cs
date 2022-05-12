@@ -9,6 +9,7 @@ using Xunit;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit.Abstractions;
+using Newtonsoft.Json.Linq;
 
 namespace MovieStarAPI.Tests
 {
@@ -38,9 +39,12 @@ namespace MovieStarAPI.Tests
             using var client = application.CreateClient();
 
             var response = await client.GetAsync("/userratings?movieid=414906");
-            var responseContentString = response.Content.ReadAsStringAsync().Result;
-            output.WriteLine("This is output from {0}", responseContentString + "<-wwwwwwwwwwwqwqqq");
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            string? responseContentString = response.Content.ReadAsStringAsync().Result;
+            output.WriteLine("This is output from {0}", responseContentString);
+
+            JArray userRatingsJArray = JArray.Parse(responseContentString);
+
+            userRatingsJArray.Count().Should().Be(1);
         }
     }
 }
