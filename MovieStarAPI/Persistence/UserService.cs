@@ -18,9 +18,9 @@ namespace MovieStarAPI.Persistence
             if (userPasswordDictionary.TryGetValue(username, out found) && found == password)
             {
                 // key/value pair exists
-                return HttpStatusCode.OK;
+                return HttpStatusCode.OK; //200
             }
-                return HttpStatusCode.NotFound;
+                return HttpStatusCode.Unauthorized; //401
         }
     }
 }
