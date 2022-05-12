@@ -21,7 +21,6 @@ namespace MovieStarAPI.Tests
 
             var response = await client.GetAsync("/weatherforecast");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-
         }
     }
 }
