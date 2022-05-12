@@ -15,9 +15,9 @@ namespace MovieStarAPI.Controllers
         }
 
         [HttpPost(Name = "PostUserComments")]
-        public void PostAsync([FromQuery] string commentid, string movieid, string comment, string username )
+        public void PostAsync([FromQuery] string movieid, string comment, string username)
         {
-            Usercomment userComment = new Usercomment(commentid, movieid, comment, username);
+            Usercomment userComment = new Usercomment(movieid, comment, username);
             Console.WriteLine("Posting UserComment: " + userComment);
             CommentService.PostComment(userComment);
 
