@@ -30,7 +30,7 @@ namespace MovieStarAPI.Controllers
             }
 
             // THIS IS OUR OWN NICE AND FINE RECIPE :)
-            // Get request for search movies https://developers.themoviedb.org/3/search/search-people
+            // Get request for search actors https://developers.themoviedb.org/3/search/search-people
             var request2 = new HttpRequestMessage(new HttpMethod("GET"), "https://api.themoviedb.org/3/search/person?api_key=" + apiKey 
                 + "&language=en-US&query=" + searchText + "&page=1&include_adult=false");
             
