@@ -12,12 +12,23 @@ namespace MovieStarAPI.Models
 
         public string ToString()
         {
-            string str = "Statistics from Statistics.cs: \n"
-            + "actorId: " + actorId + "\n"
+            string str =
+              "actorId: " + actorId + "\n"
             + " actorName: " + actorName + "\n" 
             + " voteAverage: " + voteAverage + "\n" 
             + " popularity: "  + popularity + "\n\n";
             
             return str;
         }
-    }}
+    }
+
+
+    public class MovieStatistics
+    {
+        public string movieId { get; set; }
+        public string movieName { get; set; }
+        public double movieUserRatingAvg { get; set; } 
+
+    }
+
+}

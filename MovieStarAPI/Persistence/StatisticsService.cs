@@ -5,7 +5,7 @@ namespace MovieStarAPI.Controllers
 {
     public class StatisticsService
     {
-        public static async Task<List<ActorStatistics>> GetStatistics()
+        public static async Task<List<ActorStatistics>> GetActorStatistics()
         {
             var httpClient = new HttpClient();
             string apiKey = "d969c038879a912c97bceafc05ec99cd";
@@ -41,6 +41,38 @@ namespace MovieStarAPI.Controllers
             }
 
             return actorStatisticsList;
+
+        }
+
+        public static async Task<List<MovieStatistics>> GetMovieStatistics()
+        {
+
+            List<UserRatingAvg> userRatingAvgList = await RatingService.GetUserRatingsAvg(null);
+
+            userRatingAvgList = userRatingAvgList.OrderBy(x => x.userRatingAvg).Take(20).ToList();
+
+            List<MovieStatistics> movieStatisticsList = new List<MovieStatistics>();
+            foreach (var item in userRatingAvgList)
+            {
+                MovieStatistics movieStatistics = new MovieStatistics();
+                
+                movieStatistics.movieId = item.movieId;
+                movieStatistics.movieUserRatingAvg = item.userRatingAvg;
+
+                
+                
+                //TODO //Get and attach movie names from tmdb
+
+                string movieName = "Dummy Name " + item.movieId;
+                
+                movieStatistics.movieName = movieName;
+
+
+
+                movieStatisticsList.Add(movieStatistics);
+            }
+
+            return movieStatisticsList;
 
         }
     }

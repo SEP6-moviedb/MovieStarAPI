@@ -11,12 +11,12 @@ namespace MovieStarAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class StatisticsController : ControllerBase
+    public class ActorStatisticsController : ControllerBase
     {
-        [HttpGet(Name = "GetStatistics")]
+        [HttpGet(Name = "GetActorStatistics")]
         public async Task<List<ActorStatistics>> GetAsync()
         {
-            var statistics = await StatisticsService.GetStatistics();
+            var statistics = await StatisticsService.GetActorStatistics();
 
             return statistics;
         }
