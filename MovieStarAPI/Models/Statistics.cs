@@ -2,23 +2,22 @@
 
 namespace MovieStarAPI.Models
 {
-    public class Statistics
+    public class ActorStatistics
     {
-        public List<KeyValuePair<string, int>> avgMovieRatingsByActor { get; set; }
+        public int actorId {get; set;}  //derived from tmdb directly
+        public string actorName { get; set; }  //derived from tmdb directly
+        public double voteAverage { get; set; } //calculated from tmdb's known_for list
+        public double popularity { get; set; } //derived from tmdb directly
+
 
         public string ToString()
         {
-            string str = "Statistics from Statistics.cs: ";
-
-            foreach (var item in avgMovieRatingsByActor)
-            {
-                str += item + "\n";
-            }
-
+            string str = "Statistics from Statistics.cs: \n"
+            + "actorId: " + actorId + "\n"
+            + " actorName: " + actorName + "\n" 
+            + " voteAverage: " + voteAverage + "\n" 
+            + " popularity: "  + popularity + "\n\n";
+            
             return str;
         }
-
-    };
-
-
-}
+    }}

@@ -14,7 +14,7 @@ namespace MovieStarAPI.Controllers
     public class StatisticsController : ControllerBase
     {
         [HttpGet(Name = "GetStatistics")]
-        public async Task<Statistics> GetAsync([FromQuery] string? movieid)
+        public async Task<List<ActorStatistics>> GetAsync()
         {
             var statistics = await StatisticsService.GetStatistics();
 
