@@ -3,8 +3,35 @@ using Newtonsoft.Json;
 
 namespace MovieStarAPI.Controllers
 {
-    public class StatisticsService
+    public sealed class StatisticsService
     {
+        private static StatisticsService instance = null;
+        private static readonly object padlock = new object();
+
+        private List<MovieStatistics> movieStatisticsList = new List<MovieStatistics>();
+        private DateTime lastRefreshTimeStamp = DateTime.Now.AddHours(-10);
+
+        private readonly static int RefreshIntervalHours = 1;
+
+        StatisticsService()
+        {
+        }
+
+        public static StatisticsService Instance
+        {
+            get
+            {
+                lock (padlock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new StatisticsService();
+                    }
+                    return instance;
+                }
+            }
+        }
+
         public static async Task<List<ActorStatistics>> GetActorStatistics()
         {
             var httpClient = new HttpClient();
@@ -16,9 +43,9 @@ namespace MovieStarAPI.Controllers
             var response = httpClient.SendAsync(request);
 
             ActorSearchResult actorSearchResult = JsonConvert.DeserializeObject<ActorSearchResult>(response.Result.Content.ReadAsStringAsync().Result);
-            
+
             List<ActorStatistics> actorStatisticsList = new List<ActorStatistics>();
-            
+
             foreach (var actor in actorSearchResult.results)
             {
                 ActorStatistics actorStatistics = new ActorStatistics();
@@ -29,7 +56,7 @@ namespace MovieStarAPI.Controllers
 
                 double voteAvgTotal = 0;
                 List<KnownFor>? knownForList = actor.known_for;
-             
+
                 foreach (var item in knownForList)
                 {
                     voteAvgTotal += item.vote_average;
@@ -39,41 +66,49 @@ namespace MovieStarAPI.Controllers
 
                 actorStatisticsList.Add(actorStatistics);
             }
-
             return actorStatisticsList;
-
         }
 
-        public static async Task<List<MovieStatistics>> GetMovieStatistics()
+        public async Task<List<MovieStatistics>> GetMovieStatistics()
         {
+            if ((DateTime.Now - lastRefreshTimeStamp).TotalHours > RefreshIntervalHours)
+            {
+                this.movieStatisticsList = await GetRefreshedMovieStatistics();
+                lastRefreshTimeStamp = DateTime.Now;
+            }
+            return movieStatisticsList;
+        }
 
+        public async Task<List<MovieStatistics>> GetRefreshedMovieStatistics()
+        {
             List<UserRatingAvg> userRatingAvgList = await RatingService.GetUserRatingsAvg(null);
 
-            userRatingAvgList = userRatingAvgList.OrderBy(x => x.userRatingAvg).Take(20).ToList();
+            userRatingAvgList = userRatingAvgList.OrderBy(x => x.userRatingAvg).Take(10).ToList();
 
             List<MovieStatistics> movieStatisticsList = new List<MovieStatistics>();
             foreach (var item in userRatingAvgList)
             {
                 MovieStatistics movieStatistics = new MovieStatistics();
-                
+
+                var httpClient = new HttpClient();
+                string apiKey = "d969c038879a912c97bceafc05ec99cd";
+
+                // Get request for search movies https://developers.themoviedb.org/3/search/search-movies
+                var request = new HttpRequestMessage(new HttpMethod("GET"), "https://api.themoviedb.org/3/movie/" + item.movieId
+                    + "?api_key=" + apiKey);
+
+                var response2 = httpClient.SendAsync(request);
+
+                Movie movieFromTmdb = JsonConvert.DeserializeObject<Movie>(response2.Result.Content.ReadAsStringAsync().Result);
+
                 movieStatistics.movieId = item.movieId;
                 movieStatistics.movieUserRatingAvg = item.userRatingAvg;
-
-                
-                
-                //TODO //Get and attach movie names from tmdb
-
-                string movieName = "Dummy Name " + item.movieId;
-                
-                movieStatistics.movieName = movieName;
-
-
+                movieStatistics.movieName = movieFromTmdb.title;
 
                 movieStatisticsList.Add(movieStatistics);
             }
 
             return movieStatisticsList;
-
         }
     }
 }
