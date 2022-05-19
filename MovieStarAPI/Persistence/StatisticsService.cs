@@ -12,6 +12,7 @@ namespace MovieStarAPI.Controllers
         private DateTime lastRefreshTimeStamp = DateTime.Now.AddHours(-10);
 
         private readonly static int RefreshIntervalHours = 1;
+        private readonly static int NumberOfMoviesToReturn = 10;
 
         StatisticsService()
         {
@@ -63,7 +64,6 @@ namespace MovieStarAPI.Controllers
                 }
 
                 actorStatistics.voteAverage = voteAvgTotal / knownForList.Count();
-
                 actorStatisticsList.Add(actorStatistics);
             }
             return actorStatisticsList;
@@ -81,32 +81,45 @@ namespace MovieStarAPI.Controllers
 
         public async Task<List<MovieStatistics>> GetRefreshedMovieStatistics()
         {
+            int numberOfcollectedMovies = 0;
             List<UserRatingAvg> userRatingAvgList = await RatingService.GetUserRatingsAvg(null);
 
-            userRatingAvgList = userRatingAvgList.OrderBy(x => x.userRatingAvg).Take(10).ToList();
+            userRatingAvgList = userRatingAvgList.OrderBy(x => x.userRatingAvg).ToList();
 
             List<MovieStatistics> movieStatisticsList = new List<MovieStatistics>();
-            foreach (var item in userRatingAvgList)
+
+            do
             {
-                MovieStatistics movieStatistics = new MovieStatistics();
+                foreach (var item in userRatingAvgList)
+                {
+                    MovieStatistics movieStatistics = new MovieStatistics();
 
-                var httpClient = new HttpClient();
-                string apiKey = "d969c038879a912c97bceafc05ec99cd";
+                    var httpClient = new HttpClient();
+                    string apiKey = "d969c038879a912c97bceafc05ec99cd";
 
-                // Get request for search movies https://developers.themoviedb.org/3/search/search-movies
-                var request = new HttpRequestMessage(new HttpMethod("GET"), "https://api.themoviedb.org/3/movie/" + item.movieId
-                    + "?api_key=" + apiKey);
+                    // Get request for search movies https://developers.themoviedb.org/3/search/search-movies
+                    var request = new HttpRequestMessage(new HttpMethod("GET"), "https://api.themoviedb.org/3/movie/" + item.movieId
+                        + "?api_key=" + apiKey);
 
-                var response2 = httpClient.SendAsync(request);
+                    var response2 = httpClient.SendAsync(request);
 
-                Movie movieFromTmdb = JsonConvert.DeserializeObject<Movie>(response2.Result.Content.ReadAsStringAsync().Result);
+                    Movie movieFromTmdb = JsonConvert.DeserializeObject<Movie>(response2.Result.Content.ReadAsStringAsync().Result);
 
-                movieStatistics.movieId = item.movieId;
-                movieStatistics.movieUserRatingAvg = item.userRatingAvg;
-                movieStatistics.movieName = movieFromTmdb.title;
+                    if (movieFromTmdb.title == null)
+                    {
+                        movieFromTmdb.title = movieFromTmdb.name; //sometimes name is present when title is not
+                    }
+                    movieStatistics.movieId = item.movieId;
+                    movieStatistics.movieUserRatingAvg = item.userRatingAvg;
+                    movieStatistics.movieName = movieFromTmdb.title;
 
-                movieStatisticsList.Add(movieStatistics);
-            }
+                    if (movieStatistics.movieName != null)
+                    {
+                        movieStatisticsList.Add(movieStatistics);
+                        numberOfcollectedMovies += 1;
+                    }
+                }
+            } while (numberOfcollectedMovies < NumberOfMoviesToReturn);
 
             return movieStatisticsList;
         }
