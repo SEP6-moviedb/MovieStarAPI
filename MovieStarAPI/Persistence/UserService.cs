@@ -46,9 +46,20 @@ namespace MovieStarAPI.Persistence
 
 
             string msg = statusCodeResult.StatusCode == 200 ? user.userName : "No user was found with the given credentials";
+
             Console.WriteLine(msg);
 
-            return new ContentResult() { Content = msg, StatusCode = statusCodeResult.StatusCode };
+            return new ContentResult() { Content = msg.ToJson(), StatusCode = statusCodeResult.StatusCode };
+ 
+
+           
+        }
+
+        public static Task<ContentResult> PostUser(string? username, string? password, string? displayname)
+        {
+            //  StatusCodeResult statusCodeResult = new StatusCodeResult(201);
+            // return new ContentResult() { Content = msg, StatusCode = statusCodeResult.StatusCode };
+            return null;
         }
     }
 }
