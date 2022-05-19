@@ -18,9 +18,9 @@ namespace MovieStarAPI.Controllers
         }
 
         [HttpPost(Name = "PostUser")]
-        public async Task<ContentResult> PostAsync([FromQuery] string? username, string? password, string? displayname)
+        public ContentResult PostAsync([FromQuery] string? username, string? password, string? displayname)
         {
-            ContentResult contentResult = await UserService.PostUser(username, password, displayname);
+            ContentResult contentResult =  UserService.PostUser(username, password, displayname);
             return contentResult;
 
         }

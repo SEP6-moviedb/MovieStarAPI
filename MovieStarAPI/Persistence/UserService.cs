@@ -55,11 +55,9 @@ namespace MovieStarAPI.Persistence
            
         }
 
-        public static Task<ContentResult> PostUser(string? username, string? password, string? displayname)
+        public static ContentResult PostUser(string? username, string? password, string? displayname)
         {
-            //  StatusCodeResult statusCodeResult = new StatusCodeResult(201);
-            // return new ContentResult() { Content = msg, StatusCode = statusCodeResult.StatusCode };
-            return null;
+            return new ContentResult() { StatusCode = 201 };
         }
     }
 }
