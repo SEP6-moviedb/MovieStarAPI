@@ -13,7 +13,7 @@ namespace MovieStarAPI.Persistence
         private static readonly string Url = "https://data.mongodb-api.com/app/10minexample-ivjtg/endpoint/users?secret=" + Secret;
 
         // GET USER RATINGS
-        public static async Task<StatusCodeResult> GetUser(string? username, string? password)
+        public static async Task<ContentResult> GetUser(string? username, string? password)
         {
             HttpClient httpClient = new HttpClient();
 
@@ -44,9 +44,11 @@ namespace MovieStarAPI.Persistence
                 }
             }
 
-            Console.WriteLine(statusCodeResult.StatusCode == 200 ? "User found:" + user : "No user was found with the given credentials");
 
-            return statusCodeResult;  
+            string msg = statusCodeResult.StatusCode == 200 ? user.userName : "No user was found with the given credentials";
+            Console.WriteLine(msg);
+
+            return new ContentResult() { Content = msg, StatusCode = statusCodeResult.StatusCode };
         }
     }
 }
