@@ -9,10 +9,13 @@ namespace MovieStarAPI.Controllers
     public class UsersController : ControllerBase
     {
         [HttpGet(Name = "GetUser")]
-        public async Task<HttpStatusCode> GetAsync([FromQuery] string? username, string? password)
+        public async Task<StatusCodeResult> GetAsync([FromQuery] string? username, string? password)
         {
-            var httpStatusCode = await UserService.GetUser(username, password);
-            return httpStatusCode;
+            StatusCodeResult statusCodeResult = await UserService.GetUser(username, password);
+
+            return statusCodeResult;
+
+                    
         }
     }
 }

@@ -13,22 +13,22 @@ namespace MovieStarAPI.Tests
         [Test]
         public async Task GET_existing_user_with_valid_credentials_receives_200_OK()
         {
-            System.Net.HttpStatusCode httpStatusCode = await UserService.GetUser("anders@email.dk", "anders1234");
-            Assert.That(httpStatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Microsoft.AspNetCore.Mvc.StatusCodeResult? statusCodeResult = await UserService.GetUser("anders@email.dk", "anders1234");
+            Assert.That(statusCodeResult.StatusCode, Is.EqualTo(200));
         }
 
         [Test]
         public async Task GET_non_existing_user_receives_401_Unauthorized()
         {
-            System.Net.HttpStatusCode httpStatusCode = await UserService.GetUser("noone@email.dk", "carl1234");
-            Assert.That(httpStatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+            Microsoft.AspNetCore.Mvc.StatusCodeResult? statusCodeResult = await UserService.GetUser("noone@email.dk", "carl1234");
+            Assert.That(statusCodeResult.StatusCode, Is.EqualTo(401));
         }
 
         [Test]
         public async Task GET_existing_user_with_wrong_password_receives_401_Unauthorized()
         {
-            System.Net.HttpStatusCode httpStatusCode = await UserService.GetUser("carl@email.dk", "wrongpassword");
-            Assert.That(httpStatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+            Microsoft.AspNetCore.Mvc.StatusCodeResult? statusCodeResult = await UserService.GetUser("carl@email.dk", "wrongpassword");
+            Assert.That(statusCodeResult.StatusCode, Is.EqualTo(401));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 using MovieStarAPI.Models;
@@ -12,7 +13,7 @@ namespace MovieStarAPI.Persistence
         private static readonly string Url = "https://data.mongodb-api.com/app/10minexample-ivjtg/endpoint/users?secret=" + Secret;
 
         // GET USER RATINGS
-        public static async Task<HttpStatusCode> GetUser(string? username, string? password)
+        public static async Task<StatusCodeResult> GetUser(string? username, string? password)
         {
             HttpClient httpClient = new HttpClient();
 
@@ -30,7 +31,7 @@ namespace MovieStarAPI.Persistence
 
             User? user = null;
 
-            HttpStatusCode statusCode = HttpStatusCode.Unauthorized; //401
+            StatusCodeResult statusCodeResult = new StatusCodeResult(401);
 
             if (userRootBsonArray.Count != 0) {
                 var userRootBson = userRootBsonArray[0];
@@ -39,13 +40,13 @@ namespace MovieStarAPI.Persistence
                 user = userRoot?.User;
 
                 if (user != null){
-                    statusCode = HttpStatusCode.OK; //200
+                    statusCodeResult = new StatusCodeResult(200);
                 }
             }
 
-            Console.WriteLine(statusCode == HttpStatusCode.OK ? "User found:" + user : "No user was found with the given credentials");
+            Console.WriteLine(statusCodeResult.StatusCode == 200 ? "User found:" + user : "No user was found with the given credentials");
 
-            return statusCode;  
+            return statusCodeResult;  
         }
     }
 }
