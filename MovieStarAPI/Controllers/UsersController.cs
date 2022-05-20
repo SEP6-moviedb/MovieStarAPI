@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MovieStarAPI.Models;
 using MovieStarAPI.Persistence;
 using System.Net;
 
@@ -8,11 +9,24 @@ namespace MovieStarAPI.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        [HttpGet(Name = "GetUser")]
-        public async Task<HttpStatusCode> GetAsync([FromQuery] string? username, string? password)
+        [HttpPost(Name = "PostUser")] //endpoint for both signin and signup
+        public ContentResult PostAsync([FromBody] Models.User userObject, [FromQuery] string? action)
         {
-            var httpStatusCode = await UserService.GetUser(username, password);
-            return httpStatusCode;
+            if (action != null || userObject != null) { 
+                if (action.Equals("signup")) 
+                {
+                    Console.WriteLine("Controller: sign UP in progress: " + userObject);
+                    return UserService.PostUser(userObject);
+                }
+
+                if (action.Equals("signin"))
+                {
+                    Console.WriteLine("Controller: sign IN in progress: " + userObject);
+                    return UserService.GetUser(userObject).Result;
+                }
+            }
+
+            return new ContentResult() { StatusCode = 404 };
         }
     }
 }
