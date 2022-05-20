@@ -5,6 +5,7 @@ using MongoDB.Bson.Serialization;
 using MovieStarAPI.Models;
 using System.Net;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace MovieStarAPI.Persistence
 {
@@ -13,7 +14,7 @@ namespace MovieStarAPI.Persistence
         private static readonly string Secret = "10minute";
         private static readonly string Url = "https://data.mongodb-api.com/app/10minexample-ivjtg/endpoint/users?secret=" + Secret;
 
-        // GET USER RATINGS
+        // GET USER
         public static async Task<ContentResult> GetUser(User? userObject)
         {
             HttpClient httpClient = new HttpClient();
@@ -34,8 +35,9 @@ namespace MovieStarAPI.Persistence
             StatusCodeResult statusCodeResult = new StatusCodeResult(401);
 
             if (userRootBsonArray.Count != 0) {
-                var userRootBson = userRootBsonArray[0];
+                BsonValue? userRootBson = userRootBsonArray[0];
                 string? userRootJson = userRootBson.ToJson(jsonWriterSettings);
+                //Console.WriteLine(userRootJson);
                 UserRoot? userRoot = Newtonsoft.Json.JsonConvert.DeserializeObject<UserRoot>(userRootJson);
                 user = userRoot?.User;
 
@@ -55,11 +57,28 @@ namespace MovieStarAPI.Persistence
            
         }
 
+        // POST USER
         public static ContentResult PostUser(User? userObject)
         {
             Console.WriteLine(userObject + "<---------- userobject");
 
-            return new ContentResult() { StatusCode = 201 };
+            //[FromQuery] string? username, string? password, string? displayname
+
+            HttpClient httpClient = new HttpClient();
+            MongoDBUser mongoDBuser = new MongoDBUser(userObject);
+
+            Console.WriteLine("Service: sign UP in progress: " + mongoDBuser);
+            string? json = Newtonsoft.Json.JsonConvert.SerializeObject(mongoDBuser);
+            Console.WriteLine(json + "<---------- json from userservice");
+
+            StringContent? data = new StringContent(json, Encoding.UTF8, "application/json");
+            Console.WriteLine(json + "<---------- data from userservice");
+            Task<HttpResponseMessage>? response = httpClient.PostAsync(Url, data);
+
+            System.Net.HttpStatusCode statusCode = response.Result.StatusCode;
+            Console.WriteLine("User POST request: Status code: " + statusCode);
+
+            return new ContentResult() { StatusCode = (int?)statusCode };
         }
     }
 }
