@@ -6,7 +6,7 @@ namespace MovieStarAPI.Models
     {
         public Id _id { get; set; }
 
-        public Timestamp timeStamp { get; set; }
+        public Timestamp? timeStamp { get; set; }
         
         public User User { get; set; }
     }

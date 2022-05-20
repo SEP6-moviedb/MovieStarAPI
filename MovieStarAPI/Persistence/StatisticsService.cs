@@ -109,12 +109,14 @@ namespace MovieStarAPI.Controllers
                     {
                         movieFromTmdb.title = movieFromTmdb.name; //sometimes name is present when title is not
                     }
-                    movieStatistics.movieId = item.movieId;
-                    movieStatistics.movieUserRatingAvg = item.userRatingAvg;
-                    movieStatistics.movieName = movieFromTmdb.title;
-
-                    if (movieStatistics.movieName != null)
+                    
+                    if (movieFromTmdb.title != null && movieFromTmdb.vote_average != 0)
                     {
+                        movieStatistics.movieId = item.movieId;
+                        movieStatistics.movieUserRatingAvg = item.userRatingAvg;
+                        movieStatistics.movieName = movieFromTmdb.title;
+                        movieStatistics.movieTmdbRatingAvg = movieFromTmdb.vote_average;
+
                         movieStatisticsList.Add(movieStatistics);
                         numberOfcollectedMovies += 1;
                     }
