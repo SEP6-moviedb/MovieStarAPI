@@ -78,7 +78,9 @@ namespace MovieStarAPI.Persistence
             System.Net.HttpStatusCode statusCode = response.Result.StatusCode;
             Console.WriteLine("User POST request: Status code: " + statusCode);
 
-            return new ContentResult() { StatusCode = (int?)statusCode };
+            //TODO send error if not possible + send message
+
+            return new ContentResult() { StatusCode = 201 };
         }
     }
 }
