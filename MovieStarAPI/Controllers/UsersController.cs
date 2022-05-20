@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MovieStarAPI.Models;
 using MovieStarAPI.Persistence;
 using System.Net;
 
@@ -18,9 +19,9 @@ namespace MovieStarAPI.Controllers
         }
 
         [HttpPost(Name = "PostUser")]
-        public ContentResult PostAsync([FromQuery] string? username, string? password, string? displayname)
+        public ContentResult PostAsync([FromBody] Models.User userObject)
         {
-            ContentResult contentResult =  UserService.PostUser(username, password, displayname);
+            ContentResult contentResult =  UserService.PostUser(userObject);       
             return contentResult;
 
         }

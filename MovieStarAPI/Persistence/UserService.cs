@@ -4,6 +4,7 @@ using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 using MovieStarAPI.Models;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace MovieStarAPI.Persistence
 {
@@ -55,8 +56,10 @@ namespace MovieStarAPI.Persistence
            
         }
 
-        public static ContentResult PostUser(string? username, string? password, string? displayname)
+        public static ContentResult PostUser(User? userObject)
         {
+            Console.WriteLine(userObject + "<---------- userobject");
+
             return new ContentResult() { StatusCode = 201 };
         }
     }

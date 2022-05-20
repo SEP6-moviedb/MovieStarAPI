@@ -20,12 +20,15 @@ namespace MovieStarAPI.Models
     public class User
     {
         public string userName { get; set; }
+        public string displayName { get; set; }
+        public string password { get; set; }
 
-        public string userId { get; set; }
+       
+        public string? userId { get; set; }
 
         public override string ToString()
         {
-            return "UserName: " + userName + ", \t UserId: " + userId;
+            return "UserName: " + userName + ", \t UserId: " + userId + "\t pw: " + password;
         }
     }
 }
