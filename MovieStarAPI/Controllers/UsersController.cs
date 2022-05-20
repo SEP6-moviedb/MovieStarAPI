@@ -9,21 +9,18 @@ namespace MovieStarAPI.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        [HttpGet(Name = "GetUser")]
-        public async Task<ContentResult> GetAsync([FromBody] Models.User userObject)
-        {
-            ContentResult contentResult = await UserService.GetUser(userObject);
-
-            return contentResult;
-
-        }
-
         [HttpPost(Name = "PostUser")]
-        public ContentResult PostAsync([FromBody] Models.User userObject)
+        public ContentResult PostAsync([FromBody] Models.User userObject, [FromQuery] string? action)
         {
-            ContentResult contentResult =  UserService.PostUser(userObject);       
-            return contentResult;
+            if (action != null || userObject != null) { 
+                if (action.Equals("signup"))
+                    return UserService.PostUser(userObject);
 
+                if (action.Equals("signin"))
+                    return UserService.GetUser(userObject).Result;
+            }
+
+            return new ContentResult() { StatusCode = 404 };
         }
     }
 }
