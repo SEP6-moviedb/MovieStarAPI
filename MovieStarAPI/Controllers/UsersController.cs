@@ -10,9 +10,9 @@ namespace MovieStarAPI.Controllers
     public class UsersController : ControllerBase
     {
         [HttpGet(Name = "GetUser")]
-        public async Task<ContentResult> GetAsync([FromQuery] string? username, string? password)
+        public async Task<ContentResult> GetAsync([FromBody] Models.User userObject)
         {
-            ContentResult contentResult = await UserService.GetUser(username, password);
+            ContentResult contentResult = await UserService.GetUser(userObject);
 
             return contentResult;
 

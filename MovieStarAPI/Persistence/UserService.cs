@@ -14,13 +14,12 @@ namespace MovieStarAPI.Persistence
         private static readonly string Url = "https://data.mongodb-api.com/app/10minexample-ivjtg/endpoint/users?secret=" + Secret;
 
         // GET USER RATINGS
-        public static async Task<ContentResult> GetUser(string? username, string? password)
+        public static async Task<ContentResult> GetUser(User? userObject)
         {
             HttpClient httpClient = new HttpClient();
 
             HttpRequestMessage? request = new HttpRequestMessage(new HttpMethod("GET"),
-                Url + (username != null ? ("&userid=" + username) : "")
-                    + (password != null ? ("&password=" + password) : ""));
+                Url + (userObject != null ? ("&userid=" + userObject.userName + "&password=" + userObject.password) : ""));
 
             Task<HttpResponseMessage>? response = httpClient.SendAsync(request);
             Console.WriteLine("GET request: Status code : " + response.Result.StatusCode);
