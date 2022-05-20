@@ -14,7 +14,8 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins("https://sep6-moviedb.github.io",
                                 "http://localhost:4200")
-                .AllowAnyHeader();
+                .AllowAnyHeader()
+                .AllowAnyOrigin();
         });
 });
 
