@@ -10,23 +10,22 @@ namespace MovieStarAPI.Controllers
     public class UsersController : ControllerBase
     {
         [HttpPost(Name = "PostUser")] //endpoint for both signin and signup
-        public ContentResult PostAsync([FromBody] Models.User userObject, [FromQuery] string? action)
+        public async Task<ContentResult> PostAsync([FromBody] User userObject, [FromQuery] string? action)
         {
-            if (action != null || userObject != null) { 
-                if (action.Equals("signup")) 
-                {
-                    Console.WriteLine("Controller: sign UP in progress: " + userObject);
-                    return UserService.PostUser(userObject);
-                }
+            ContentResult notFound = new ContentResult() { Content = "no valid action parameter was detected", StatusCode = 404 }; //404 Not Found
 
-                if (action.Equals("signin"))
-                {
-                    Console.WriteLine("Controller: sign IN in progress: " + userObject);
-                    return UserService.GetUser(userObject).Result;
-                }
+            if (action != null)
+            {
+                if (action.Equals("signup"))
+                    return await UserService.PostUser(userObject);
+                else if (action.Equals("signin"))
+                    return await UserService.GetUser(userObject);
+                else
+                    return notFound;
             }
+            else
+                return notFound;
 
-            return new ContentResult() { StatusCode = 404 };
         }
     }
 }

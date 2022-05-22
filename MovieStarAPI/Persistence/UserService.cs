@@ -3,8 +3,8 @@ using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 using MovieStarAPI.Models;
+using Newtonsoft.Json.Linq;
 using System.Net;
-using Newtonsoft.Json;
 using System.Text;
 
 namespace MovieStarAPI.Persistence
@@ -23,7 +23,6 @@ namespace MovieStarAPI.Persistence
                 Url + (userObject != null ? ("&userid=" + userObject.userName + "&password=" + userObject.password) : ""));
 
             Task<HttpResponseMessage>? response = httpClient.SendAsync(request);
-            Console.WriteLine("GET request: Status code : " + response.Result.StatusCode);
 
             JsonWriterSettings jsonWriterSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict };
 
@@ -34,14 +33,16 @@ namespace MovieStarAPI.Persistence
 
             StatusCodeResult statusCodeResult = new StatusCodeResult(401);
 
-            if (userRootBsonArray.Count != 0) {
+            if (userRootBsonArray.Count != 0)
+            {
                 BsonValue? userRootBson = userRootBsonArray[0];
                 string? userRootJson = userRootBson.ToJson(jsonWriterSettings);
                 //Console.WriteLine(userRootJson);
                 UserRoot? userRoot = Newtonsoft.Json.JsonConvert.DeserializeObject<UserRoot>(userRootJson);
                 user = userRoot?.User;
 
-                if (user != null){
+                if (user != null)
+                {
                     statusCodeResult = new StatusCodeResult(200);
                 }
             }
@@ -52,35 +53,39 @@ namespace MovieStarAPI.Persistence
             Console.WriteLine(msg);
 
             return new ContentResult() { Content = msg.ToJson(), StatusCode = statusCodeResult.StatusCode };
- 
 
-           
+
+
         }
 
+
         // POST USER
-        public static ContentResult PostUser(User? userObject)
+        public async static Task<ContentResult> PostUser(User? userObject)
         {
-            Console.WriteLine(userObject + "<---------- userobject");
-
-            //[FromQuery] string? username, string? password, string? displayname
-
             HttpClient httpClient = new HttpClient();
             MongoDBUser mongoDBuser = new MongoDBUser(userObject);
-
-            Console.WriteLine("Service: sign UP in progress: " + mongoDBuser);
             string? json = Newtonsoft.Json.JsonConvert.SerializeObject(mongoDBuser);
-            Console.WriteLine(json + "<---------- json from userservice");
-
             StringContent? data = new StringContent(json, Encoding.UTF8, "application/json");
-            Console.WriteLine(json + "<---------- data from userservice");
-            Task<HttpResponseMessage>? response = httpClient.PostAsync(Url, data);
 
-            System.Net.HttpStatusCode statusCode = response.Result.StatusCode;
-            Console.WriteLine("User POST request: Status code: " + statusCode);
 
-            //TODO send error if not possible + send message
+            HttpResponseMessage? response = await httpClient.PostAsync(Url, data);
 
-            return new ContentResult() { StatusCode = 201 };
+            var statusCode = HttpStatusCode.InternalServerError; //500 Internal Server Error
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                string? responseString = response.Content.ReadAsStringAsync().Result;
+                JObject? responseJobject = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(responseString);
+                JToken? upsertedIdJToken = responseJobject["upsertedId"];
+
+                if (upsertedIdJToken != null)
+                    statusCode = HttpStatusCode.Created; //201 Created
+                else
+                {
+                    int matchedCount = int.Parse(responseJobject["matchedCount"].ToString());
+                    statusCode = matchedCount > 0 ? HttpStatusCode.Conflict : HttpStatusCode.UnprocessableEntity; //409 Conflict //422 Unprocessable Entity 
+                }
+            }
+            return new ContentResult() { StatusCode = ((int)statusCode) };
         }
     }
 }
