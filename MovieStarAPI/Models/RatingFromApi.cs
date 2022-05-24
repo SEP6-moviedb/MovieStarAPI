@@ -48,6 +48,13 @@ namespace MovieStarAPI.Models
         public double userRatingAvg { get; set; }
         public double userRatingCount { get; set; }
 
+        public UserRatingAvg(string movieId, double userRatingAvg, double userRatingCount)
+        {
+            this.movieId = movieId;
+            this.userRatingAvg = userRatingAvg;
+            this.userRatingCount = userRatingCount;
+        }
+
         public override string ToString()
         {
             return "Movie ID: " + movieId + ", \t User Rating Avg: " + userRatingAvg + ", \t User Rating Count: " + userRatingCount;

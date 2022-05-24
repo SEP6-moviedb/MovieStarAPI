@@ -11,6 +11,10 @@ namespace MovieStarAPI.Controllers
             public async Task<List<Models.UserRatingAvg>> GetAsync([FromQuery] string? movieid)
             {
                 var ratingList = await RatingService.GetUserRatingsAvg(movieid);
+
+            if (ratingList.Count == 0)
+                ratingList.Add(new UserRatingAvg(movieid, 0, 0));
+
                 return ratingList;
             }
 
