@@ -46,10 +46,11 @@ namespace MovieStarAPI.Models
         [JsonProperty("_id")]
         public string movieId { get; set; }
         public double userRatingAvg { get; set; }
+        public double userRatingCount { get; set; }
 
         public override string ToString()
         {
-            return "Movie ID: " + movieId + ", \t User Rating Avg: " + userRatingAvg;
+            return "Movie ID: " + movieId + ", \t User Rating Avg: " + userRatingAvg + ", \t User Rating Count: " + userRatingCount;
         }
     }
 }
