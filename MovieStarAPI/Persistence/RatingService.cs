@@ -17,13 +17,11 @@ namespace MovieStarAPI.Controllers
 
         // GET USER RATINGS
         public static async Task<List<UserRatingAvg>> GetUserRatingsAvg(string? movieid)
-        {
-            HttpClient httpClient = new HttpClient();
-            
+        {            
             HttpRequestMessage? request = new HttpRequestMessage(new HttpMethod("GET"), 
                 Url + (movieid != null ? ("&movieid=" + movieid) : ""));
 
-            Task<HttpResponseMessage>? response = httpClient.SendAsync(request);
+            Task<HttpResponseMessage>? response = GetHttpClient().SendAsync(request);
             Console.WriteLine("GET request: Status code : " + response.Result.StatusCode);
 
             JsonWriterSettings jsonWriterSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict }; 
@@ -44,16 +42,14 @@ namespace MovieStarAPI.Controllers
         }
 
         // POST RATING
-        public static void PostRating(UserRating userRating)
-        {
-            HttpClient httpClient = new HttpClient();
-
+        public static void PostRating(UserRating userRating){
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(userRating);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
-            Task<HttpResponseMessage>? response = httpClient.PostAsync(Url, data);
+            Task<HttpResponseMessage>? response = GetHttpClient().PostAsync(Url, data);
+        }
 
-            System.Net.HttpStatusCode statusCode = response.Result.StatusCode;
-            Console.WriteLine("POST request: Status code: " + statusCode);
+        public static HttpClient GetHttpClient(){
+            return new HttpClient();
         }
     }
 
