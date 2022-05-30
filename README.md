@@ -4,7 +4,7 @@
 
 
 ## Links:
-The base url contains swagger documentation on the API
+* Swagger documentation url: https://moviestarapi.azurewebsites.net/swagger/index.html
 * Base url: https://moviestarapi.azurewebsites.net
 
 ## General information:
