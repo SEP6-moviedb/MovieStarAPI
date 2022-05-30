@@ -5,7 +5,7 @@
 
 ## Links:
 The base url contains swagger documentation on the API
-Base url: https://moviestarapi.azurewebsites.net
+* Base url: https://moviestarapi.azurewebsites.net
 
 ## General information:
 This is the source code for the Movie Star API hosted in Azure.
