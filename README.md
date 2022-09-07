@@ -9,3 +9,4 @@
 
 ## General information:
 This is the source code for the Movie Star API hosted in Azure.
+TEST
